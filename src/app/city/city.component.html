@@ -23,6 +23,17 @@
     <div class="p-grid p-justify-center">
       <div class="p-col-2">
         <div class="box">
+          <p-calendar
+            [disabledDates]="invalidDates"
+            [minDate]="minDateCalendar"
+            [maxDate]="maxDateCalendar"
+            [selectOtherMonths]="false"
+            [defaultDate]="defaultCalendarDate"
+            [dateFormat]="calendarDateFormat"
+            [(ngModel)]="calendarValue"
+            (onSelect)="onCalendarDateChange($event)"
+          >
+          </p-calendar>
           <p-inputSwitch 
             [(ngModel)]="checked" 
             (onChange)="handleChange($event)">
@@ -33,7 +44,8 @@
   </div>
 
   <p-chart
-   #chart type="line" 
+   #chart 
+   type="bar" 
    [data]="data" 
    [options]="options">
   </p-chart>

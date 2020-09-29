@@ -22,6 +22,7 @@ import { InputNumberModule }         from 'primeng/inputnumber';
 import { InputSwitchModule }         from 'primeng/inputswitch';
 import { ChartModule }             from 'primeng/chart';
 import { CardModule }              from 'primeng/card';
+import { CalendarModule }            from 'primeng/calendar';
 import { CountryComponent }        from './country/country.component';
 import { CountryEffects }          from './country/store/country.effects';
 import { LeftSidebarComponent } from './left-sidebar/left-sidebar.component';
@@ -47,7 +48,8 @@ import { LeftSidebarComponent } from './left-sidebar/left-sidebar.component';
     HttpClientModule,
     FormsModule,
     ChartModule,
-    CardModule
+    CardModule,
+    CalendarModule
   ],
   providers: [],
   bootstrap: [AppComponent]

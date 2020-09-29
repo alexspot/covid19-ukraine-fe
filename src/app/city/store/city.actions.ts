@@ -1,5 +1,4 @@
 import { Action } from '@ngrx/store'
-
 import { City } from '../city.model';
 
 export const GET_CITIES                = '[City] Get Cities'
