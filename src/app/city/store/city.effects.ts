@@ -81,7 +81,7 @@ export class CityEffects {
   )
 
   @Effect()
-  getDailyGrowthByCitiesByDay = = this.actions$.pipe(
+  getDailyGrowthByCitiesByDay = this.actions$.pipe(
     ofType(CityActions.GET_DAILY_GROWTH_BY_DAY),
     switchMap((action: CityActions.getDailyGrowthByCitiesByDay) => {
       return this.http.get<City[]>(
