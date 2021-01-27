@@ -1,0 +1,40 @@
+{
+  "countryChartConfig" : {
+    "confirmedCases" : {
+      "label": "Confirmed Cases",
+      "backgroundColor": "#B03A2E",
+      "borderColor": "#B03A2E",
+      "fill": false,
+      "pointRadius": 2,
+      "lineTension": 0.2,
+      "data": []
+    },
+    "recoveredCases" : {
+      "label": "Recovered Cases",
+      "backgroundColor": "#148F77",
+      "fill": false,
+      "borderColor": "#148F77",
+      "pointRadius": 2,
+      "lineTension": 0.2,
+      "data": []
+    },
+    "deathCases" : {
+      "label": "Deaths",
+      "backgroundColor": "#154360",
+      "fill": false,
+      "borderColor": "#154360",
+      "pointRadius": 2,
+      "lineTension": 0.2,
+      "data": []
+    },
+    "activeCases": {
+      "label": "Active Cases",
+      "backgroundColor": "#2980B9",
+      "fill": false,
+      "borderColor": "#2980B9",
+      "pointRadius": 2,
+      "lineTension": 0.2,
+      "data": []
+    }
+  }
+}
