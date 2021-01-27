@@ -11,6 +11,9 @@
   },
   "private": true,
   "dependencies": {
+    "@amcharts/amcharts4": "^4.10.13",
+    "@amcharts/amcharts4-fonts": "^4.0.1",
+    "@amcharts/amcharts4-geodata": "^4.1.19",
     "@angular/animations": "~8.2.13",
     "@angular/common": "~8.2.13",
     "@angular/compiler": "~8.2.13",
@@ -33,6 +36,7 @@
     "lodash": "^4.17.19",
     "moment": "^2.27.0",
     "ng-chartist": "^4.1.0",
+    "ngx-clipboard": "^12.3.0",
     "perfect-scrollbar": "^1.5.0",
     "popper.js": "^1.16.1",
     "primeflex": "^2.0.0-rc.1",

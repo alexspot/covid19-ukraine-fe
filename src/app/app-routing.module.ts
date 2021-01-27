@@ -5,6 +5,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { CityComponent }        from './city/city.component';
 import { DashboardComponent }   from './dashboard/dashboard.component';
 import { CountryComponent }     from './country/country.component';
+import { MapComponent }         from './map/map.component';
 
 const routes: Routes = [
   { path: 'dashboard',      component: CityComponent },
@@ -16,7 +17,9 @@ const routes: Routes = [
 
   { path: 'region-days',    component: CityComponent,    data:  {kind: 'days'}},
   { path: 'region-months',  component: CityComponent,    data:  {kind: 'months'}},
-  { path: 'region-growth',  component: CityComponent,    data:  {kind: 'growth'}}
+  { path: 'region-growth',  component: CityComponent,    data:  {kind: 'growth'}},
+
+  { path: 'map',            component: MapComponent}
 ]
 
 

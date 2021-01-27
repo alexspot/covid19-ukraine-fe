@@ -1,5 +1,8 @@
 import * as fromApp from '../store/app.reducer';
 import * as CountryActions from './store/country.actions';
+import { AppConfigService } from '../services/app-config.service';
+
+
 
 import { Subscription } from 'rxjs';
 import { Component, OnInit, OnDestroy } from '@angular/core';
@@ -8,10 +11,35 @@ import * as moment from 'moment';
 import { map } from 'rxjs/operators';
 import { Country } from './country.model';
 import * as _ from 'lodash';
-import { Router, ActivatedRoute } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
+import { ClipboardService } from 'ngx-clipboard'
+import {
+  trigger,
+  state,
+  style,
+  animate,
+  transition,
+} from '@angular/animations';
 
 @Component({
   selector: 'app-country',
+  animations: [
+    trigger('openClose', [
+      state('open', style({
+        opacity: 1,
+      })),
+      state('closed', style({
+        opacity: 0,
+        visibility: 'hidden'
+      })),
+      transition('open => closed', [
+        animate('1.5s')
+      ]),
+      transition('closed => open', [
+        animate('0.5s')
+      ]),
+    ]),
+  ],
   templateUrl: './country.component.html',
   styleUrls: ['./country.component.css']
 })
@@ -22,27 +50,48 @@ export class CountryComponent implements OnInit, OnDestroy {
   routerSub:    Subscription;
   kind:         any;
   countryList:  any;
-
-  
+  confirmedCasesConfig: any;
+  recoveredCasesConfig: any;
+  deathCasesConfig: any;
+  activeCasesConfig: any;
+  isSharePopupOpen = false;
   datesAvailable = ['202003', '202004', '202005', '202006', '202007']
+  monthsLabels = [ 
+    moment('2020-03-01').format('MMM YYYY'),
+    moment('2020-04-01').format('MMM YYYY'),
+    moment('2020-05-01').format('MMM YYYY'),
+    moment('2020-06-01').format('MMM YYYY'),
+    moment('2020-07-01').format('MMM YYYY')
+  ]
 
   constructor(
     private store: Store<fromApp.AppState>,
-    private activatedRoute: ActivatedRoute) { }
+    private activatedRoute: ActivatedRoute,
+    private configService: AppConfigService,
+    private clipboardService: ClipboardService) { }
 
-  createArrayOfDates(dateFrom, dateTo) {
-    var r = []; // array of results
-    var s = moment(dateFrom, "YYYYMMDD"); // start date
-    var e = moment(dateTo, "YYYYMMDD")   //  end date
-    while (s < e ) {
-      r.push(s.format('DD MMM'));
-      s.add(1, 'days');
+    popupToggle() {
+      this.isSharePopupOpen = !this.isSharePopupOpen;
     }
 
-    return r
-  }  
+    createArrayOfDates(dateFrom, dateTo) {
+      var r = []; // array of results
+      var s = moment(dateFrom, "YYYYMMDD"); // start date
+      var e = moment(dateTo, "YYYYMMDD")   //  end date
+      while (s < e ) {
+        r.push(s.format('DD MMM'));
+        s.add(1, 'days');
+      }
+
+      return r
+    }  
 
   ngOnInit() {
+    this.confirmedCasesConfig = this.configService.confirmedCases;
+    this.recoveredCasesConfig = this.configService.recoveredCases;
+    this.deathCasesConfig     = this.configService.deathCases;
+    this.activeCasesConfig    = this.configService.activeCases;
+
     this.routerSub = this.activatedRoute.data.subscribe(r => {
       this.kind = r.kind;
       switch (r.kind) {
@@ -55,27 +104,9 @@ export class CountryComponent implements OnInit, OnDestroy {
               this.data = {
                 labels: this.createArrayOfDates('20200401', '20200731'),
                 datasets: [
-                  {
-                    label: 'Confirmed Cases',
-                    backgroundColor: '#B03A2E',
-                    borderColor: '#B03A2E',
-                    fill: false,
-                    data: []
-                  },
-                  {
-                    label: 'Recovered Cases',
-                    backgroundColor: '#148F77',
-                    fill: false,
-                    borderColor: '#148F77',
-                    data: []
-                  },
-                  {
-                    label: 'Deaths',
-                    backgroundColor: '#154360',
-                    fill: false,
-                    borderColor: '#154360',
-                    data: []
-                  }
+                  this.confirmedCasesConfig,
+                  this.recoveredCasesConfig,
+                  this.deathCasesConfig
                 ]
               }
               this.data.datasets[0].data = _.map(this.countryList, (i) => { return i['confirmed'] })
@@ -93,34 +124,10 @@ export class CountryComponent implements OnInit, OnDestroy {
               this.data = {
                 labels: this.createArrayOfDates('20200401', '20200731'),
                 datasets: [
-                  {
-                    label: 'Confirmed Cases',
-                    backgroundColor: '#B03A2E',
-                    borderColor: '#B03A2E',
-                    fill: false,
-                    data: []
-                  },
-                  {
-                    label: 'Active Cases',
-                    backgroundColor: '#2980B9',
-                    fill: false,
-                    borderColor: '#2980B9',
-                    data: []
-                  },
-                  {
-                    label: 'Recovered Cases',
-                    backgroundColor: '#148F77',
-                    fill: false,
-                    borderColor: '#148F77',
-                    data: []
-                  },
-                  {
-                    label: 'Deaths',
-                    backgroundColor: '#154360',
-                    fill: false,
-                    borderColor: '#154360',
-                    data: []
-                  }
+                  this.confirmedCasesConfig,
+                  this.activeCasesConfig,
+                  this.recoveredCasesConfig,
+                  this.deathCasesConfig
                 ]
               }
               this.data.datasets[0].data = _.map(this.countryList, (i) => { return i['confirmed'] })
@@ -137,34 +144,12 @@ export class CountryComponent implements OnInit, OnDestroy {
             .subscribe((countries: Country[]) => {
               this.countryList = countries;
               this.data = {
-                labels: [
-                  moment('2020-03-01').format('MMM YYYY'),
-                  moment('2020-04-01').format('MMM YYYY'),
-                  moment('2020-05-01').format('MMM YYYY'),
-                  moment('2020-06-01').format('MMM YYYY'),
-                  moment('2020-07-01').format('MMM YYYY')
-                ],
+                labels: this.monthsLabels,
                 datasets: [
-                  {
-                    label: 'Confirmed Cases',
-                    backgroundColor: '#B03A2E',
-                    data: []
-                  },
-                  {
-                    label: 'Active Cases',
-                    backgroundColor: '#2980B9',
-                    data: []
-                  },
-                  {
-                    label: 'Recovered Cases',
-                    backgroundColor: '#148F77',
-                    data: []
-                  },
-                  {
-                    label: 'Deaths',
-                    backgroundColor: '#154360',
-                    data: []
-                  }
+                  this.confirmedCasesConfig,
+                  this.activeCasesConfig,
+                  this.recoveredCasesConfig,
+                  this.deathCasesConfig
                 ]
               }
               this.data.datasets[0].data = _.map(this.countryList, (i) => { return i['confirmed'] })
@@ -179,6 +164,14 @@ export class CountryComponent implements OnInit, OnDestroy {
         }
       }
     })
+  }
+
+  onShareButtonClick() {
+    this.popupToggle();
+    setTimeout(()=> {
+      this.popupToggle();
+    }, 2000);
+    this.clipboardService.copy(window.location.href);
   }
 
   ngOnDestroy() {
